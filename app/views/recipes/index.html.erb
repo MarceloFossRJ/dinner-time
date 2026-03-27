@@ -81,17 +81,7 @@
         <% @recipes.each do |recipe| %>
           <div class="col">
             <div class="card h-100">
-              <% if recipe.image_url.present? %>
-                <img src="<%= recipe.image_url %>"
-                     class="card-img-top"
-                     alt="<%= recipe.title %>"
-                     loading="lazy"
-                     style="height: 200px; object-fit: cover;">
-              <% else %>
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                  <span class="text-muted">No image</span>
-                </div>
-              <% end %>
+
               <div class="card-body">
                 <h5 class="card-title"><%= recipe.title %></h5>
                 <% if recipe.category.present? %>

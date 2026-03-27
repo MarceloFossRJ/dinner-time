@@ -3,18 +3,7 @@
     <%= link_to "&larr; Back to search".html_safe, request.referrer || recipes_path, class: "btn btn-outline-secondary btn-sm mb-4" %>
 
     <div class="row">
-      <div class="col-md-5 mb-4">
-        <% if @recipe.image_url.present? %>
-          <img src="<%= @recipe.image_url %>"
-               class="img-fluid rounded"
-               alt="<%= @recipe.title %>"
-               loading="lazy">
-        <% else %>
-          <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
-            <span class="text-muted">No image available</span>
-          </div>
-        <% end %>
-      </div>
+
 
       <div class="col-md-7">
         <h1 class="mb-3"><%= @recipe.title %></h1>
