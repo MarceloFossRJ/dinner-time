@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <%= link_to "&larr; Back to search".html_safe, request.referrer || recipes_path, class: "btn btn-outline-secondary btn-sm mb-4" %>
+
+    <div class="row">
+      <div class="col-md-5 mb-4">
+        <% if @recipe.image_url.present? %>
+          <img src="<%= @recipe.image_url %>"
+               class="img-fluid rounded"
+               alt="<%= @recipe.title %>"
+               loading="lazy">
+        <% else %>
+          <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+            <span class="text-muted">No image available</span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="col-md-7">
+        <h1 class="mb-3"><%= @recipe.title %></h1>
+
+        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+          <% if @recipe.category.present? %>
+            <span class="badge bg-secondary fs-6"><%= @recipe.category %></span>
+          <% end %>
+          <span class="text-warning fs-5">&#9733; <%= number_with_precision(@recipe.ratings, precision: 1) %></span>
+          <% if @recipe.author.present? %>
+            <small class="text-muted">by <%= @recipe.author %></small>
+          <% end %>
+        </div>
+
+        <div class="row g-2 mb-4">
+          <div class="col-auto">
+            <div class="border rounded p-2 text-center">
+              <div class="fw-bold"><%= @recipe.prep_time %> min</div>
+              <div class="text-muted small">Prep</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="border rounded p-2 text-center">
+              <div class="fw-bold"><%= @recipe.cook_time %> min</div>
+              <div class="text-muted small">Cook</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="border rounded p-2 text-center bg-light">
+              <div class="fw-bold"><%= @recipe.total_time %> min</div>
+              <div class="text-muted small">Total</div>
+            </div>
+          </div>
+        </div>
+
+        <h5>Ingredients</h5>
+        <ul class="list-group list-group-flush mb-4">
+          <% @recipe.recipe_ingredients.each do |ingredient| %>
+            <li class="list-group-item px-0"><%= ingredient.name %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

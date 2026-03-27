@@ -1,0 +1,128 @@
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <h1 class="mb-4">Find a Recipe</h1>
+
+    <div class="card mb-4" data-controller="ingredients">
+      <div class="card-body">
+        <%= form_with url: recipes_path, method: :get, local: true do |f| %>
+          <%# Ingredient tag input %>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Ingredients you have</label>
+            <div class="d-flex gap-2 mb-2">
+              <input type="text"
+                     class="form-control"
+                     placeholder="e.g. chicken, garlic, lemon..."
+                     data-ingredients-target="input"
+                     data-action="keydown.enter->ingredients#add:prevent">
+              <button type="button"
+                      class="btn btn-outline-secondary"
+                      data-action="click->ingredients#add">
+                Add
+              </button>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-2" data-ingredients-target="tags">
+              <%# Pre-populate tags if ingredients were submitted %>
+              <% @ingredients.each do |ing| %>
+                <span class="badge bg-primary d-flex align-items-center gap-1 fs-6 fw-normal py-2 px-3">
+                  <%= ing %>
+                  <button type="button"
+                          class="btn-close btn-close-white"
+                          aria-label="Remove"
+                          style="font-size:0.6rem"
+                          data-action="click->ingredients#remove">
+                  </button>
+                  <input type="hidden" name="ingredients[]" value="<%= ing %>">
+                </span>
+              <% end %>
+            </div>
+            <small class="text-muted">
+              <span data-ingredients-target="count"><%= @ingredients.length %>/3</span> ingredients added
+              (minimum 3 required)
+            </small>
+          </div>
+
+          <%# Filters %>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Category</label>
+              <%= f.select :category,
+                  options_for_select([["All categories", ""]] + @categories.map { |c| [c, c] }, @category),
+                  {},
+                  class: "form-select" %>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Max total time</label>
+              <%= f.select :max_time,
+                  options_for_select([
+                    ["Any time", ""],
+                    ["≤ 15 min", 15],
+                    ["≤ 30 min", 30],
+                    ["≤ 45 min", 45],
+                    ["≤ 60 min", 60]
+                  ], @max_time),
+                  {},
+                  class: "form-select" %>
+            </div>
+          </div>
+
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-ingredients-target="submit"
+                  <%= "disabled" if @ingredients.length < 3 %>>
+            Search Recipes
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @recipes %>
+      <p class="text-muted mb-3"><strong><%= @recipes.length %></strong> recipes found</p>
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <% @recipes.each do |recipe| %>
+          <div class="col">
+            <div class="card h-100">
+              <% if recipe.image_url.present? %>
+                <img src="<%= recipe.image_url %>"
+                     class="card-img-top"
+                     alt="<%= recipe.title %>"
+                     loading="lazy"
+                     style="height: 200px; object-fit: cover;">
+              <% else %>
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                  <span class="text-muted">No image</span>
+                </div>
+              <% end %>
+              <div class="card-body">
+                <h5 class="card-title"><%= recipe.title %></h5>
+                <% if recipe.category.present? %>
+                  <span class="badge bg-secondary mb-2"><%= recipe.category %></span>
+                <% end %>
+                <p class="card-text mb-1">
+                  <span class="text-warning">&#9733;</span>
+                  <%= number_with_precision(recipe.ratings, precision: 1) %>
+                </p>
+                <p class="card-text mb-1">
+                  <small class="text-muted">
+                    <% if recipe.total_time > 0 %>
+                      &#128337; <%= recipe.total_time %> min total
+                    <% else %>
+                      &#128337; Time not specified
+                    <% end %>
+                  </small>
+                </p>
+                <p class="card-text">
+                  <small class="text-success fw-semibold">
+                    Matches <%= recipe.match_count %> of your ingredients
+                  </small>
+                </p>
+              </div>
+              <div class="card-footer">
+                <%= link_to "View Recipe", recipe_path(recipe), class: "btn btn-outline-primary btn-sm" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
